@@ -1,0 +1,180 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.4;
+}
+
+.container {
+    width: 300px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #ff0000;
+    text-align: center;
+    border-bottom: 2px solid #ff0000;
+    padding-bottom: 10px;
+}
+
+.toggle-section {
+    margin-bottom: 20px;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    gap: 12px;
+}
+
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-slider {
+    width: 44px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 12px;
+    position: relative;
+    transition: background-color 0.3s;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s;
+}
+
+.toggle-checkbox:checked + .toggle-slider {
+    background-color: #ff0000;
+}
+
+.toggle-checkbox:checked + .toggle-slider::before {
+    transform: translateX(20px);
+}
+
+.duration-section {
+    margin-bottom: 20px;
+}
+
+.duration-section label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.duration-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.duration-input:focus {
+    outline: none;
+    border-color: #ff0000;
+}
+
+.duration-display {
+    font-weight: 600;
+    color: #ff0000;
+    font-size: 14px;
+    min-width: 50px;
+}
+
+.preset-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.preset-btn {
+    padding: 6px 12px;
+    border: 2px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s;
+}
+
+.preset-btn:hover {
+    border-color: #ff0000;
+    color: #ff0000;
+}
+
+.preset-btn.active {
+    background-color: #ff0000;
+    color: white;
+    border-color: #ff0000;
+}
+
+.save-section {
+    margin-bottom: 15px;
+}
+
+.save-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover {
+    background-color: #e60000;
+}
+
+.status-section {
+    min-height: 20px;
+}
+
+.status-message {
+    text-align: center;
+    font-size: 12px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
