@@ -30,11 +30,42 @@
                 <input type="number" id="maxDuration" min="1" max="1440" value="10" class="duration-input">
                 <span class="max-duration-display">10:00</span>
             </div>
-            <div class="preset-buttons">
-                <button class="preset-btn" data-min="0" data-max="5">0-5 min</button>
-                <button class="preset-btn" data-min="0" data-max="10">0-10 min</button>
-                <button class="preset-btn" data-min="5" data-max="20">5-20 min</button>
-                <button class="preset-btn" data-min="10" data-max="30">10-30 min</button>
+            <div class="preset-buttons" id="presetButtons">
+                <!-- Preset buttons will be populated by JavaScript -->
+            </div>
+            
+            <div class="preset-management">
+                <button id="managePresetsBtn" class="manage-presets-btn">Manage Presets</button>
+                
+                <div id="presetManager" class="preset-manager hidden">
+                    <h3>Custom Presets</h3>
+                    
+                    <div class="add-preset-section">
+                        <h4>Add New Preset</h4>
+                        <div class="preset-form">
+                            <input type="text" id="presetName" placeholder="Preset name" class="preset-name-input">
+                            <div class="preset-range-inputs">
+                                <input type="number" id="presetMin" min="0" max="1440" placeholder="Min" class="preset-input">
+                                <span>to</span>
+                                <input type="number" id="presetMax" min="1" max="1440" placeholder="Max" class="preset-input">
+                                <span>minutes</span>
+                            </div>
+                            <button id="addPresetBtn" class="add-preset-btn">Add Preset</button>
+                        </div>
+                    </div>
+                    
+                    <div class="existing-presets">
+                        <h4>Existing Presets</h4>
+                        <div id="presetList" class="preset-list">
+                            <!-- Custom presets will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="preset-actions">
+                        <button id="resetPresetsBtn" class="reset-presets-btn">Reset to Default</button>
+                        <button id="closePresetManagerBtn" class="close-manager-btn">Done</button>
+                    </div>
+                </div>
             </div>
         </div>
 
