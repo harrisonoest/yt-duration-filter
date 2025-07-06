@@ -1,9 +1,11 @@
+let minDuration = 0;
 let maxDuration = 0;
 let isFilterEnabled = false;
 
 const browserAPI = (typeof browser !== 'undefined') ? browser : chrome;
 
-browserAPI.storage.sync.get(['maxDuration', 'isEnabled'], function(result) {
+browserAPI.storage.sync.get(['minDuration', 'maxDuration', 'isEnabled'], function(result) {
+  minDuration = (result && result.minDuration) || 0;
   maxDuration = (result && result.maxDuration) || 0;
   isFilterEnabled = (result && result.isEnabled) || false;
   filterVideos();
@@ -11,6 +13,9 @@ browserAPI.storage.sync.get(['maxDuration', 'isEnabled'], function(result) {
 
 browserAPI.storage.onChanged.addListener(function(changes, namespace) {
   if (namespace === 'sync') {
+    if (changes.minDuration) {
+      minDuration = changes.minDuration.newValue || 0;
+    }
     if (changes.maxDuration) {
       maxDuration = changes.maxDuration.newValue || 0;
     }
@@ -36,7 +41,7 @@ function parseDuration(durationText) {
 }
 
 function filterVideos() {
-  if (!isFilterEnabled || maxDuration <= 0) {
+  if (!isFilterEnabled || (maxDuration <= 0 && minDuration <= 0)) {
     const hiddenVideos = document.querySelectorAll('.yt-duration-filter-hidden');
     hiddenVideos.forEach(video => {
       video.style.display = '';
@@ -62,7 +67,17 @@ function filterVideos() {
         const durationText = durationElement.textContent.trim();
         const durationInSeconds = parseDuration(durationText);
         
-        if (durationInSeconds > maxDuration) {
+        let shouldHide = false;
+        
+        if (minDuration > 0 && durationInSeconds < minDuration) {
+          shouldHide = true;
+        }
+        
+        if (maxDuration > 0 && durationInSeconds > maxDuration) {
+          shouldHide = true;
+        }
+        
+        if (shouldHide) {
           video.style.display = 'none';
           video.classList.add('yt-duration-filter-hidden');
         } else {
