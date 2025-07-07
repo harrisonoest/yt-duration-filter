@@ -1,11 +1,11 @@
 {
   "manifest_version": 2,
   "name": "YouTube Duration Filter",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "Filter YouTube videos by maximum duration on the homepage",
   "applications": {
     "gecko": {
-      "id": "yt-duration-filter@example.com"
+      "id": "hoest97@gmail.com"
     }
   },
   "permissions": [
