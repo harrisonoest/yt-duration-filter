@@ -26,11 +26,10 @@ A browser extension that allows users to filter videos on YouTube's homepage by 
 ### Firefox
 
 1. Download or clone this repository
-2. Rename `manifest-firefox.json` to `manifest.json` (backup the original first)
-3. Open Firefox and navigate to `about:debugging`
-4. Click "This Firefox" in the sidebar
-5. Click "Load Temporary Add-on"
-6. Select the `manifest.json` file from the extension directory
+2. Open Firefox and navigate to `about:debugging`
+3. Click "This Firefox" in the sidebar
+4. Click "Load Temporary Add-on"
+5. Select the `manifest.json` file from the extension directory
 
 ## Usage
 
@@ -68,7 +67,8 @@ A browser extension that allows users to filter videos on YouTube's homepage by 
 
 ### Files Structure
 
-- `manifest.json` - Extension configuration and permissions
+- `manifest.json` - Extension configuration and permissions for Firefox (Manifest V2)
+- `manifest-v3.json` - Extension configuration and permissions for Chrome/Chromium (Manifest V3)
 - `content.js` - Main script that detects and filters YouTube videos
 - `content.css` - CSS for hiding filtered videos
 - `popup.html` - Extension popup interface
@@ -98,7 +98,7 @@ The extension stores the following data locally in your browser:
 
 - `storage` - To save user preferences and custom presets
 - `activeTab` - To access the current YouTube tab
-- `host_permissions` - To run on YouTube.com
+- `https://www.youtube.com/*` - To run on YouTube.com (Manifest V2) / `host_permissions` (Manifest V3)
 
 ### Firefox-Specific Notes
 
