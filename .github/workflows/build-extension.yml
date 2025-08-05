@@ -1,4 +1,4 @@
-name: Build Firefox Extension
+name: Build Browser Extensions
 
 on:
   push:
@@ -9,9 +9,8 @@ on:
     types: [published]
 
 jobs:
-  build:
+  build-firefox:
     runs-on: ubuntu-latest
-    
     steps:
     - uses: actions/checkout@v4
     
@@ -80,6 +79,100 @@ jobs:
       with:
         name: firefox-extension
         path: ${{ env.PACKAGE_NAME }}
+        retention-days: 30
+  
+  build-chrome:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Validate manifest
+      run: |
+        if ! python3 -c "import json; json.load(open('manifest-v3.json'))"; then
+          echo "Invalid manifest-v3.json"
+          exit 1
+        fi
+        echo "Manifest validation passed"
+    
+    - name: Check required files
+      run: |
+        required_files=("manifest-v3.json" "background.js" "content.js" "popup.js" "popup.html" "content.css" "popup.css")
+        for file in "${required_files[@]}"; do
+          if [ ! -f "$file" ]; then
+            echo "Missing required file: $file"
+            exit 1
+          fi
+        done
+        
+        if [ ! -d "icons" ]; then
+          echo "Missing icons directory"
+          exit 1
+        fi
+        
+        icon_files=("icons/icon16.png" "icons/icon48.png" "icons/icon128.png")
+        for icon in "${icon_files[@]}"; do
+          if [ ! -f "$icon" ]; then
+            echo "Missing icon file: $icon"
+            exit 1
+          fi
+        done
+        
+        echo "All required files present"
+    
+    - name: Create extension package
+      run: |
+        # Get version from manifest
+        VERSION=$(python3 -c "import json; print(json.load(open('manifest-v3.json'))['version'])")
+        
+        # Create package name
+        PACKAGE_NAME="youtube-duration-filter-chrome-v${VERSION}.zip"
+        
+        # Create zip excluding unnecessary files
+        zip -r "$PACKAGE_NAME" \
+          manifest-v3.json \
+          background.js \
+          content.js \
+          content.css \
+          popup.js \
+          popup.html \
+          popup.css \
+          icons/ \
+          -x "*.git*" "*.md" "*.yml" "*.yaml" "node_modules/*" "*.DS_Store"
+        
+        # Rename manifest-v3.json to manifest.json for Chrome
+        mkdir temp_chrome
+        cp background.js content.js content.css popup.js popup.html popup.css temp_chrome/
+        cp -r icons temp_chrome/
+        cp manifest-v3.json temp_chrome/manifest.json
+        cd temp_chrome
+        zip -r "../$PACKAGE_NAME" .
+        cd ..
+        rm -rf temp_chrome
+        
+        echo "Created package: $PACKAGE_NAME"
+        echo "PACKAGE_NAME_CHROME=$PACKAGE_NAME" >> $GITHUB_ENV
+        
+        # Verify package contents
+        echo "Package contents:"
+        unzip -l "$PACKAGE_NAME"
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: chrome-extension
+        path: ${{ env.PACKAGE_NAME_CHROME }}
+        retention-days: 30
+    
+    - name: Upload to release
+      if: github.event_name == 'release'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ${{ env.PACKAGE_NAME_CHROME }}
+        asset_name: ${{ env.PACKAGE_NAME_CHROME }}
+        asset_content_type: application/zip
         retention-days: 30
     
     - name: Upload to release
